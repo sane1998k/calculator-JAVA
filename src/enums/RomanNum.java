@@ -25,7 +25,6 @@ public enum RomanNum {
     RomanNum(int num) {
         this.num = num;
     }
-
     public int getNum() {
         return num;
     }
