@@ -1,15 +1,20 @@
 package classes;
 import static constants.ConstantsForMatcher.*;
 import enums.RomanNum;
+
+import java.util.Locale;
 import java.util.function.BinaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Numbers {
     public static boolean isValidString(String s) {
-        String xz = "^([\\-]|)\\d{"+NUMBERS_D[0]+","+NUMBERS_D[1]+"}(\\s|)[+\\-*/]?(\\s|)\\d{"+NUMBERS_D[0]+","+NUMBERS_D[1]+"}$|" +
-                    "^[IVX]{"+NUMBERS_IVX[0]+","+NUMBERS_IVX[1]+"}(\\s|)[+\\-*/]?(\\s|)[IVX]{"+NUMBERS_IVX[0]+","+NUMBERS_IVX[1]+"}$";
-        Matcher stringMatcher = Pattern.compile(xz).matcher(s);
+        // The Main regex check on valid. Don't scare if it possibly... The regex usual look like:
+        // ^([\\-]|)\\d{1,2}(\\s|)[+\\-*/]?(\\s|)\\d{1,2}$|^[IVXivx]{1,4}(\\s|)[+\\-*/]?(\\s|)[IVXivx]{1,4}$
+        String regex = "^([\\-]|)\\d{"+NUMBERS_D[0]+","+NUMBERS_D[1]+"}(\\s|)[+\\-*/]?(\\s|)\\d{"+NUMBERS_D[0]+","+NUMBERS_D[1]+"}$|" +
+                    "^[IVXivx]{"+NUMBERS_IVX[0]+","+NUMBERS_IVX[1]+"}(\\s|)[+\\-*/]?(\\s|)[IVXivx]{"+NUMBERS_IVX[0]+","+NUMBERS_IVX[1]+"}$";
+        //
+        Matcher stringMatcher = Pattern.compile(regex).matcher(s);
         return stringMatcher.find();
     }
 
@@ -18,35 +23,45 @@ public class Numbers {
         String secondNum = "";
         String symbol = "";
         if (isValidString(s)) {
-            Matcher firstNumMatcher = Pattern.compile("^([\\-]|)\\d{"+NUMBERS_D[0]+","+NUMBERS_D[1]+"}|^[IVX]{"+NUMBERS_IVX[0]+","+NUMBERS_IVX[1]+"}").matcher(s);
-            Matcher secondNumMatcher = Pattern.compile("\\d{"+NUMBERS_D[0]+","+NUMBERS_D[1]+"}$|[IVX]{"+NUMBERS_IVX[0]+","+NUMBERS_IVX[1]+"}$").matcher(s);
+            // Get data from string to:
+            Matcher firstNumMatcher = Pattern.compile("^([\\-]|)\\d{"+NUMBERS_D[0]+","+NUMBERS_D[1]+"}|^[IVXivx]{"+NUMBERS_IVX[0]+","+NUMBERS_IVX[1]+"}").matcher(s);
+            Matcher secondNumMatcher = Pattern.compile("\\d{"+NUMBERS_D[0]+","+NUMBERS_D[1]+"}$|[IVXivx]{"+NUMBERS_IVX[0]+","+NUMBERS_IVX[1]+"}$").matcher(s);
             Matcher symbolMatcher = Pattern.compile("[+\\-*/]").matcher(s);
+            //
+
+            // Fill values
             while(firstNumMatcher.find() && secondNumMatcher.find() && symbolMatcher.find()) {
                 firstNum = firstNumMatcher.group().trim();
                 secondNum = secondNumMatcher.group().trim();
                 symbol = symbolMatcher.group().trim();
             }
-            System.out.println(test(firstNum, secondNum, symbol));
+            //
+                System.out.println(getResult(firstNum, secondNum, symbol));
+
         } else {
-            System.out.println("Error");
+            throw new IllegalArgumentException("Wrong format");
         }
     }
 
-    public static <T> Object test(String a, String b, String operator) {
+    public static <T> Object getResult(String a, String b, String operator) {
         Integer result = 0;
         BinaryOperator<Integer> binaryOperator = action(operator);
+
+        // Check regex, if string contains integer then we can plus them;
+        // else this value is Roman number and we can sum them.
         if (a.matches("^([\\-]|)\\d{"+NUMBERS_D[0]+","+NUMBERS_D[1]+"}") && b.matches("([\\-]|)\\d{"+NUMBERS_D[0]+"," +
-                            ""+NUMBERS_D[1]+"}$") && operator.matches("[+\\-*/]")) {
+                            ""+NUMBERS_D[1]+"}$")) {
             result = binaryOperator.apply(Integer.parseInt(a), Integer.parseInt(b));
-        } else if (a.matches("^[IVX]{"+NUMBERS_IVX[0]+","+NUMBERS_IVX[1]+"}")){
-            RomanNum numOne = RomanNum.valueOf(a);
-            RomanNum numTwo = RomanNum.valueOf(b);
+        } else {
+            RomanNum numOne = RomanNum.valueOf(a.toUpperCase(Locale.ROOT));
+            RomanNum numTwo = RomanNum.valueOf(b.toUpperCase(Locale.ROOT));
+
             result = binaryOperator.apply(numOne.getNum(), numTwo.getNum());
             for (RomanNum r : RomanNum.values()) {
                 if (r.getNum() == result) return r;
             }
-        } else {
-            System.out.println("Wrong format");
+
+            if (result < 1) throw new IllegalArgumentException("Roman number can't be equal or less than 0");
         }
         return result;
     }
