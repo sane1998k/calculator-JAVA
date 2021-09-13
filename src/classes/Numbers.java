@@ -51,10 +51,19 @@ public class Numbers {
         // else this value is Roman number and we can sum them.
         if (a.matches("^([\\-]|)\\d{"+NUMBERS_D[0]+","+NUMBERS_D[1]+"}") && b.matches("([\\-]|)\\d{"+NUMBERS_D[0]+"," +
                             ""+NUMBERS_D[1]+"}$")) {
-            result = binaryOperator.apply(Integer.parseInt(a), Integer.parseInt(b));
+            int numOne = Integer.parseInt(a);
+            int numTwo = Integer.parseInt(b);
+
+            if (numOne > 10 || numTwo > 10 && !operator.equals("-"))
+                throw new IllegalArgumentException("Numbers can't be more than 10");
+
+            result = binaryOperator.apply(numOne, numTwo);
         } else {
             RomanNum numOne = RomanNum.valueOf(a.toUpperCase(Locale.ROOT));
             RomanNum numTwo = RomanNum.valueOf(b.toUpperCase(Locale.ROOT));
+
+            if (numOne.getNum() > 10 || numTwo.getNum() > 10)
+                throw new IllegalArgumentException("Numbers can't be more than 10");
 
             result = binaryOperator.apply(numOne.getNum(), numTwo.getNum());
             for (RomanNum r : RomanNum.values()) {
