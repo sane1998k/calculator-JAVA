@@ -12,8 +12,16 @@ That amazing calculator, you haven't seen it before. The score of the applicatio
 9) Результатом операции деления является целое число, остаток отбрасывается. 
 10) Результатом работы калькулятора с арабскими числами могут быть отрицательные числа и ноль. Результатом работы калькулятора с римскими числами могут быть только положительные числа, если результат работы меньше единицы, выбрасывается исключение
 # How to use
+
 Import 3 folders:
 1) classes;
 2) constants;
 3) enums;
 
+Insert these strings to Main class:
+
+Screen screen = new Screen(); 
+screen.toStartScreen();
+
+# Enjoy :S
+<img src="https://s9.gifyu.com/images/calculator.gif">
