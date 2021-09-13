@@ -1,5 +1,8 @@
 # calculator-JAVA
 That amazing calculator, you haven't seen it before. The score of the application is 10 of 10.
+
+<img src="http://pa1.narvii.com/7106/e8b212ec0a17bf7b55f98c85009510c76130b730r1-320-320_00.gif">
+
 ## It has that functional (pls, translate it from ru. I don't wanna do anything ^_^):
 1) Калькулятор умеет выполнять операции сложения, вычитания, умножения и деления с двумя числами: a + b, a - b, a * b, a / b. Данные передаются в одну строку (смотри пример)! Решения, в которых каждое число и арифмитеческая операция передаются с новой строки считаются неверными.
 2) Калькулятор умеет работать как с арабскими (1,2,3,4,5…), так и с римскими (I,II,III,IV,V…) числами.
